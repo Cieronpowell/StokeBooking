@@ -45,7 +45,7 @@
         ]"
         :businessHours="businessHours"
       />
-      <calendarKey :bookingTypes="bookingTypes" />
+      <calendarKey :bookingTypes="bookingTypes" style="width:20%" />
     </div>
   </div>
 </template>

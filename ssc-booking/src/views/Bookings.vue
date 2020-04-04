@@ -1,7 +1,13 @@
 <template>
   <main>
     <div class="calendar-container card">
+      <div class="title">
+        <h1>Bookings</h1>
+        <h2 class="options">...</h2>
+      </div>
+      <div class="split-bar"></div>
       <FullCalendar
+        ref="fullCalendar"
         class="calendar"
         schedulerLicenseKey="GPL-My-Project-Is-Open-Source"
         height="auto"
@@ -10,10 +16,11 @@
         selectable="true"
         minTime="08:00:00"
         maxTime="23:00:00"
+        @eventReceive="bookingAdded"
         slotDuration="00:30:00"
         :slotLabelInterval="slotLabelInterval"
         :plugins="calendarPlugins"
-        :header="{ left: '', center: 'prev,title,next', right: '' }"
+        :header="{ left: '', center: 'title', right: '' }"
         defaultView="resourceTimeGridDay"
         :allDaySlot="allDaySlot"
         :events="[
@@ -41,9 +48,26 @@
         :businessHours="businessHours"
       />
     </div>
-    <div class="booking-options"></div>
-    <div class="date-selector">
-      <datepicker :inline="true"></datepicker>
+    <div id="booking-options" class="booking-options card">
+      <div class="title">
+        <h1>Booking Options</h1>
+        <h2 class="options">...</h2>
+      </div>
+      <div class="split-bar"></div>
+      <calendarKey :bookingTypes="bookingTypes" />
+    </div>
+    <div class="date-selector card">
+      <div class="title">
+        <h1>Date Selection</h1>
+        <h2 class="options">...</h2>
+      </div>
+      <div class="split-bar"></div>
+      <datepicker
+        :selected="changeCalendarDate"
+        :value="state.date"
+        :inline="true"
+        @selected="changeCalendarDate"
+      ></datepicker>
     </div>
   </main>
 </template>
@@ -51,17 +75,20 @@
 // @ is an alias to /src
 import FullCalendar from "@fullcalendar/vue";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
 import Datepicker from "vuejs-datepicker/dist/vuejs-datepicker.esm.js";
+import calendarKey from "@/components/calendarKey";
 
 export default {
   name: "overview",
   components: {
     FullCalendar,
-    Datepicker
+    Datepicker,
+    calendarKey
   },
   data() {
     return {
+      state: { date: new Date() },
       calendarPlugins: [resourceTimeGridPlugin, interactionPlugin],
       allDaySlot: false,
       droppable: true,
@@ -91,6 +118,32 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    this.setupDraggable();
+  },
+  methods: {
+    setupDraggable() {
+      new Draggable(document.getElementById("booking-options"), {
+        itemSelector: ".booking",
+        eventData: function(eventEl) {
+          let event = {
+            title: eventEl.innerText,
+            color: eventEl.getAttribute("data-color"),
+            duration: "01:00",
+            create: true
+          };
+          return event;
+        }
+      });
+    },
+    changeCalendarDate(date) {
+      let calendarApi = this.$refs.fullCalendar.getApi();
+      calendarApi.gotoDate(date);
+    },
+    bookingAdded(info) {
+      console.log(info.event);
+    }
   }
 };
 </script>
@@ -100,7 +153,6 @@ export default {
 }
 .booking-options {
   grid-area: 1 / 9 / 8 / 11;
-  background-color: green;
 }
 .date-selector {
   grid-area: 8 / 9 / 11 / 11;

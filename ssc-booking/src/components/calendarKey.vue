@@ -5,6 +5,7 @@
       v-for="type in bookingTypes"
       :key="type.id"
       :style="{ 'background-color': type.color }"
+      :data-color="type.color"
     >
       <p>{{ type.name }}</p>
     </div>
@@ -21,7 +22,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .bookingTypes {
-  width: 20%;
   padding-top: 2vh;
 }
 p {
@@ -38,5 +38,6 @@ p {
   height: 4vh;
   display: block;
   text-align: center;
+  cursor: pointer;
 }
 </style>
