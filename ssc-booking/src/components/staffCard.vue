@@ -5,7 +5,7 @@
       <h2 class="options">...</h2>
     </div>
     <div class="split-bar"></div>
-    <div v-for="staff in staffList" :key="staff.id">
+    <div v-for="staff in todaysStaff" :key="staff.id">
       <figure>
         <img class="avatar" v-bind:src="staff.img" />
         <figcaption>
@@ -25,9 +25,15 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 export default {
   name: "staffCard",
-  props: ["staffList"]
+  computed: mapGetters(["todaysStaff"]),
+  methods: mapActions(["fetchStaff"]),
+  created() {
+    this.fetchStaff();
+  }
 };
 </script>
 

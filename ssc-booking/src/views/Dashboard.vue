@@ -1,7 +1,7 @@
 <template>
   <main>
     <dailyMessage :message="message" class="dailyMessage" />
-    <staffCard :staffList="staffList" class="staffCard" />
+    <staffCard class="staffCard" />
     <overview class="overview" />
   </main>
 </template>
@@ -20,32 +20,6 @@ export default {
   },
   data() {
     return {
-      staffList: [
-        {
-          id: 1,
-          name: "Cieron Powell",
-          start: "08:00",
-          end: "16:00",
-          role: "Ski / Reception",
-          img: "https://randomuser.me/api/portraits/men/31.jpg"
-        },
-        {
-          id: 2,
-          name: "Test Name",
-          start: "08:00",
-          end: "16:00",
-          role: "Ski",
-          img: "https://randomuser.me/api/portraits/men/1.jpg"
-        },
-        {
-          id: 3,
-          name: "Test Long very long name",
-          start: "08:00",
-          end: "16:00",
-          role: "Tube",
-          img: "https://randomuser.me/api/portraits/men/15.jpg"
-        }
-      ],
       message:
         "The new system is still under constructions please report any issues at ssc@cieron.me"
     };

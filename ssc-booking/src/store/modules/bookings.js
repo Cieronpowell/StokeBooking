@@ -7,15 +7,23 @@ const getters = {
   allBookings: state => state.bookings
 };
 const actions = {
-  async fetchdata({ commit }) {
-    console.log("run");
-    const response = await axios.get(
-      "https://sscbooking.free.beeceptor.com/booking"
-    );
-    console.log(response);
+  async fetchBookings({ commit }) {
+    const response = await axios.get("http://demo1356085.mockable.io/booking");
+    commit("setBookings", response.data);
+  },
+  async addBooking({ commit }, data) {
+    /*  const response = await axios.post(
+      "https://sscbooking.free.beeceptor.com/booking",
+      { data }
+    ); */
+
+    commit("newBooking", data);
   }
 };
-const mutations = {};
+const mutations = {
+  setBookings: (state, bookings) => (state.bookings = bookings),
+  newBooking: (state, booking) => state.bookings.push(booking)
+};
 
 export default {
   state,

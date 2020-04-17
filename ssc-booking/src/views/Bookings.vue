@@ -78,11 +78,8 @@ export default {
     bookingModal
   },
   computed: mapGetters(["allBookings"]),
-  // prettier-ignore
-  methods: mapActions(['fetchdata']),
   created() {
-    this.fetchdata();
-    this.$store.dispatch("fetchdata");
+    this.fetchBookings();
   },
   data() {
     return {
@@ -147,13 +144,22 @@ export default {
       calendarApi.gotoDate(date);
     },
     bookingAdded(info) {
-      console.log(info.event.extendedProps);
+      console.dir(info.event);
       this.showModal();
+      let event = {
+        title: info.event.title,
+        start: info.event.start,
+        end: info.event.end,
+        color: info.event.backgroundColor,
+        resourceIds: info.event._def.resourceIds
+      };
+      this.addBooking(event);
     },
     openBooking(data) {
       console.log(data.event.extendedProps);
       this.showModal();
-    }
+    },
+    ...mapActions(["fetchBookings", "addBooking"])
   }
 };
 </script>
