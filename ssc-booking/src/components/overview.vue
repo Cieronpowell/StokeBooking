@@ -21,22 +21,7 @@
         defaultView="resourceTimeGridDay"
         :allDaySlot="allDaySlot"
         nowIndicator="true"
-        :events="[
-          {
-            title: 'Stoke Sixth Form',
-            start: '2020-04-02T10:00:00',
-            end: '2020-04-02T12:00:00',
-            color: 'green',
-            resourceIds: [1, 2]
-          },
-          {
-            title: 'Level 6',
-            start: '2020-04-02T10:00:00',
-            end: '2020-04-02T18:00:00',
-            color: 'red',
-            resourceId: '2'
-          }
-        ]"
+        :events="allBookings"
         :resources="[
           { id: '1', title: 'Main Slope' },
           { id: '2', title: 'Intermidiate Slope' },
@@ -54,12 +39,14 @@
 import calendarKey from "@/components/calendarKey";
 import FullCalendar from "@fullcalendar/vue";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
+import { mapGetters } from "vuex";
 export default {
   name: "overview",
   components: {
     FullCalendar,
     calendarKey
   },
+  computed: mapGetters(["allBookings"]),
   data() {
     return {
       calendarPlugins: [resourceTimeGridPlugin],

@@ -1,5 +1,6 @@
 <template>
   <main>
+    <bookingModal v-show="bookingModal" @close="closeModal" />
     <div class="calendar-container card">
       <div class="title">
         <h1>Bookings</h1>
@@ -17,28 +18,14 @@
         minTime="08:00:00"
         maxTime="23:00:00"
         @eventReceive="bookingAdded"
+        @eventClick="openBooking"
         slotDuration="00:30:00"
         :slotLabelInterval="slotLabelInterval"
         :plugins="calendarPlugins"
         :header="{ left: '', center: 'title', right: '' }"
         defaultView="resourceTimeGridDay"
         :allDaySlot="allDaySlot"
-        :events="[
-          {
-            title: 'Stoke Sixth Form',
-            start: '2020-04-02T10:00:00',
-            end: '2020-04-02T12:00:00',
-            color: 'green',
-            resourceIds: [1, 2]
-          },
-          {
-            title: 'Level 6',
-            start: '2020-04-02T10:00:00',
-            end: '2020-04-02T18:00:00',
-            color: 'red',
-            resourceId: '2'
-          }
-        ]"
+        :events="allBookings"
         :resources="[
           { id: '1', title: 'Main Slope' },
           { id: '2', title: 'Intermidiate Slope' },
@@ -78,16 +65,28 @@ import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
 import Datepicker from "vuejs-datepicker/dist/vuejs-datepicker.esm.js";
 import calendarKey from "@/components/calendarKey";
+import bookingModal from "@/components/bookingModal.vue";
+import { mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   name: "overview",
   components: {
     FullCalendar,
     Datepicker,
-    calendarKey
+    calendarKey,
+    bookingModal
+  },
+  computed: mapGetters(["allBookings"]),
+  // prettier-ignore
+  methods: mapActions(['fetchdata']),
+  created() {
+    this.fetchdata();
+    this.$store.dispatch("fetchdata");
   },
   data() {
     return {
+      bookingModal: false,
       state: { date: new Date() },
       calendarPlugins: [resourceTimeGridPlugin, interactionPlugin],
       allDaySlot: false,
@@ -123,6 +122,12 @@ export default {
     this.setupDraggable();
   },
   methods: {
+    showModal() {
+      this.bookingModal = true;
+    },
+    closeModal() {
+      this.bookingModal = false;
+    },
     setupDraggable() {
       new Draggable(document.getElementById("booking-options"), {
         itemSelector: ".booking",
@@ -142,7 +147,12 @@ export default {
       calendarApi.gotoDate(date);
     },
     bookingAdded(info) {
-      console.log(info.event);
+      console.log(info.event.extendedProps);
+      this.showModal();
+    },
+    openBooking(data) {
+      console.log(data.event.extendedProps);
+      this.showModal();
     }
   }
 };
